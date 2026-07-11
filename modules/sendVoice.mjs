@@ -201,6 +201,22 @@ export async function sendVoice(api, streamUrl, display, threadId, type) {
     }
   }
 
+  // Dọn file tạm
+  try { fs.unlinkSync(sendPath); } catch {}
+  try { fs.unlinkSync(localPath); } catch {}
+  // Dọn các file cũ > 5 phút
+  try {
+    const files = fs.readdirSync(TMP_DIR);
+    const now = Date.now();
+    for (const f of files) {
+      const fp = path.join(TMP_DIR, f);
+      try {
+        const stat = fs.statSync(fp);
+        if (stat.isFile() && now - stat.mtimeMs > 300_000) fs.unlinkSync(fp);
+      } catch {}
+    }
+  } catch {}
+
   // Gửi voice (upload lên free host rồi dùng URL)
   console.log("[*] Processing voice...");
   const voicePath = path.join(TMP_DIR, `${hash}_voice.m4a`);
