@@ -3,6 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { execSync } from "node:child_process";
 import FormData from "form-data";
+import { Readable } from "node:stream";
 
 const TMP_DIR = process.env.TMP_DIR
   ? path.resolve(process.env.TMP_DIR)
@@ -82,17 +83,14 @@ async function findFfmpeg() {
 }
 
 async function downloadToFile(streamUrl, outPath) {
-  const ffmpegPath = await findFfmpeg();
-  const cmd = [
-    `"${ffmpegPath}"`,
-    `-user_agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"`,
-    `-headers "Referer: https://soundcloud.com/"`,
-    `-i "${streamUrl}"`,
-    `-c:a copy`,
-    `"${outPath}"`,
-    `-y`,
-  ].join(" ");
-  execSync(cmd, { timeout: TIMEOUT, encoding: "utf-8", stdio: "pipe" });
+  // Tải bằng fetch trực tiếp (nhanh hơn ffmpeg)
+  const res = await fetch(streamUrl, {
+    headers: HEADERS,
+    signal: AbortSignal.timeout(60000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status} khi tải`);
+  const buf = Buffer.from(await res.arrayBuffer());
+  fs.writeFileSync(outPath, buf);
   if (!fs.existsSync(outPath) || fs.statSync(outPath).size < 1024) throw new Error("File lỗi hoặc quá nhỏ");
 }
 
