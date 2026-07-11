@@ -4,7 +4,15 @@ import crypto from "node:crypto";
 import { execSync } from "node:child_process";
 import FormData from "form-data";
 
-const TMP_DIR = path.join(process.cwd(), "music_library");
+const TMP_DIR = process.env.TMP_DIR
+  ? path.resolve(process.env.TMP_DIR)
+  : (() => {
+    // Linux (Belmo): dùng /tmp, Windows: dùng music_library
+    const dir = process.platform === "win32"
+      ? path.join(process.cwd(), "music_library")
+      : "/tmp/zalo_bot_music";
+    return dir;
+  })();
 const CLIENT_ID = "lmRjTI0FqeXygHMXc3hRzS7hth20PNk5";
 const HEADERS = {
   "accept": "application/json, text/javascript, */*; q=0.01",
