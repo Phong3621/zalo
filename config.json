@@ -1,0 +1,18 @@
+{
+  "prefix": "!",
+  "language": "vi",
+  "autoReply": {
+    "enabled": true,
+    "message": "Xin chào! Hiện tại mình đang bận, sẽ trả lời bạn sau nhé!",
+    "cooldownMinutes": 60,
+    "replyToFriends": true,
+    "replyToStrangers": true,
+    "useAI": true
+  },
+  "voice": {
+    "ffmpegPath": "ffmpeg"
+  },
+  "dola": {
+    "deepThink": false
+  }
+}

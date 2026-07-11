@@ -1,0 +1,12 @@
+{
+  "name": "zalo-bot",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "ffmpeg-static": "*",
+    "form-data": "*",
+    "zca-js": "^2.1.2"
+  }
+}

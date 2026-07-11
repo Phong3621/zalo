@@ -1,0 +1,11 @@
+const SEP = "\n━━━━━━━━━━━━━━━━━━━━━━\n";
+
+function box(title, body) {
+  return `┌─ ${title} ─────────────────────┐\n${body}\n└────────────────────────────────┘`;
+}
+
+function line(title) {
+  return `\n◆ ${title}:\n${"─".repeat(28)}`;
+}
+
+export default { SEP, box, line };
